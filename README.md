@@ -1,2 +1,6 @@
-# aimlds
-Playing with Artificial Intellligence, Machine Learning, and Data Science
+# AI ML DS
+A place for me to review and practice topics in:
+- Artifical Intelligence
+- Machine Learning
+- Data Science
+
