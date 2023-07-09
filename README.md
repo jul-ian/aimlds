@@ -4,3 +4,6 @@ A place for me to review and practice topics in:
 - Machine Learning
 - Data Science
 
+Languages currently used:
+- Python
+
