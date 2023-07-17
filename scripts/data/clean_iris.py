@@ -2,33 +2,35 @@
 Script to clean the iris dataset for use
 """
 
-from datadir import datadir
-from os.path import join
 import pandas as pd
+import joblib
+from os.path import expanduser
 
-irispath = join(datadir, 'raw/iris.data')
 names_iris = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']
-iris_raw = pd.read_csv(irispath, names=names_iris)
+iris_raw = pd.read_csv('~/Github/aimlds/data/raw/iris.data', names=names_iris)
 
-iris_raw.to_csv(join(datadir, 'processed/iris.csv'))
+iris_raw.to_csv('~/Github/aimlds/data/processed/iris.csv')
 
 from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import MaxMinScaler
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
 
-num_cols = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
-cat_cols = ['species']
+iris_train, iris_test = train_test_split(iris_raw, test_size=0.2)
 
-num_pipeline = Pipeline([
-    ('scaler', MinMaxScaler())
-    ])
-cat_pipeline = Pipeline([
-    ('encoder', LabelEncoder())
-    ])
+features = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
+target = ['species']
 
-full_pipeline = ColumnTransformer([
-    ('num', num_pipeline, num_cols),
-    ('cat', cat_pipeline, cat_cols)
-    ])
-iris_clean = full_pipeline.fit_transform()
+X_train, X_test = iris_train[features].to_numpy(), iris_test[features].to_numpy()
+y_train, y_test = iris_train[target].to_numpy(), iris_test[target].to_numpy()
+
+encoder = LabelEncoder()
+scaler = MinMaxScaler()
+
+X_train, y_train = scaler.fit_transform(X_train), encoder.fit_transform(y_train.ravel())
+X_test, y_test = scaler.fit(X_test), encoder.fit(y_test.ravel())
+
+joblib.dump((X_train, X_test, y_train, y_test), 
+            expanduser('~/Github/aimlds/data/clean/irisxy_train_test.pkl'))
+
+
+
