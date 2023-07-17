@@ -27,7 +27,7 @@ encoder = LabelEncoder()
 scaler = MinMaxScaler()
 
 X_train, y_train = scaler.fit_transform(X_train), encoder.fit_transform(y_train.ravel())
-X_test, y_test = scaler.fit(X_test), encoder.fit(y_test.ravel())
+X_test, y_test = scaler.transform(X_test), encoder.transform(y_test.ravel())
 
 joblib.dump((X_train, X_test, y_train, y_test), 
             expanduser('~/Github/aimlds/data/clean/irisxy_train_test.pkl'))

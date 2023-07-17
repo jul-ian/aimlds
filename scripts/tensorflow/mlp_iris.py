@@ -21,3 +21,5 @@ mlp_model = Sequential([
 mlp_model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 mlp_model.fit(X_train, y_train, epochs=20, validation_split=0.1)
+
+mlp_model.evaluate(X_test, y_test)
