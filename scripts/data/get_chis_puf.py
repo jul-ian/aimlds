@@ -19,7 +19,8 @@ for zipfile in chis_zipfiles:
     with ZipFile(zipfile) as file:
         sasfile = [x for x in file.namelist() if x.endswith('sas7bdat')]
         file.extract(sasfile[0], temp_dir)
-        sasdf = pd.read_sas(os.path.join(temp_dir, sasfile[0]))
+        sasdf = (pd.read_sas(os.path.join(temp_dir, sasfile[0]))
+                 .rename(columns=lambda s: s.lower()))
         outfname = os.path.dirname(sasfile[0]) + '.pkl'
         outfname = outfname.replace('_sas', '')
         sasdf.to_pickle(os.path.join(proc_dir, outfname))
