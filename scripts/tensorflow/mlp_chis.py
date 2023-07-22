@@ -15,11 +15,11 @@ adult_2020 = pd.read_pickle('~/Github/aimlds/data/processed/adult_2020.pkl')
 
 adult_1920 = pd.concat([adult_2019, adult_2020], axis=0)
 
-features = ['srsex', 'srage_p1', 'ahedc_p1', 'ombsrr_p1', 'marit2', 'ur_clrt6', 'wrkst_p1']
+features = ['srsex', 'srage_p1', 'ahedc_p1', 'ombsrr_p1', 'marit2', 'ur_clrt6', 'wrkst_p1',
+            'ab17', 'diabetes', 'smkcur']
 target = ['ab1']
 
 adult = adult_1920[features + target]
-#adult = adult.assign(ab1 = lambda df: df[target[0]] - 1)
 adult_train, adult_test = train_test_split(adult, test_size=0.2)
 
 one_hot_encoder = OneHotEncoder(sparse=False)
