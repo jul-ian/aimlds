@@ -39,5 +39,10 @@ relationship_map = {
     }
 
 race_map = {
-    
+    'white': "White", "Black": 'black', 'other': 'Other',
+    'aapi': 'Asian-Pac-Islander', 'native': 'Amer-Indian_Eskimo'
     }
+
+income_mapped = income_raw.copy()
+df1 = income_mapped.assign(workclass = income_mapped['workclass'].map(workclass_map))
+
