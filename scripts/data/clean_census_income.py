@@ -11,13 +11,16 @@ col_names = ['age', 'workclass', 'fnlwgt', 'education', 'education_num', 'marita
  'hours_per_week', 'native_country', 'income_cat']
 
 income_raw = pd.read_csv(income_path, names=col_names)
+for col in income_raw.columns:
+    if income_raw[col].dtype == 'object':
+        income_raw[[col]] = income_raw[[col]].apply(lambda sr: sr.str.strip()) 
 
 income_raw.to_csv('~/Github/aimlds/data/processed/census_income.csv')
 
 ## feature engineering
 workclass_map = {
     'private': ['Private'],
-    'government': ['Local-gove', 'State-gov', 'Federal-gov'],
+    'government': ['Local-gov', 'State-gov', 'Federal-gov'],
     'self_employed': ['Self-emp-not-inc', 'Self-emp-inc'],
     'other': ['?', 'Without-pay', 'Never-worked']
     }
