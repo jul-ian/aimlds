@@ -5,6 +5,12 @@ Clean 'Census Income' dataset
 from os.path import expanduser
 import pandas as pd
 
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+import joblib
+
 income_path = expanduser('~/Github/aimlds/data/raw/census_income/adult.data')
 col_names = ['age', 'workclass', 'fnlwgt', 'education', 'education_num', 'marital_status', 
  'occupation', 'relationship', 'race', 'sex', 'capital_gain', 'capital_loss',
@@ -76,8 +82,35 @@ col_keep = ['age', 'workclass', 'education', 'marital_status', 'relationship',
 income_cleaned = income_mapped[col_keep]
 income_cleaned.to_csv('~/Github/aimlds/data/processed/census_income_cleaned.csv')
 
+## Preprocessing
+num_features = ['age', 'hours_per_week']
+cat_features = ['workclass', 'education', 'marital_status', 
+                'relationship', 'race', 'sex', 'filed_capital']
+target = ['income_cat']
+
+num_pipeline = Pipeline([
+    ('scaler', MinMaxScaler())
+    ])
+cat_pipeline = Pipeline([
+    ('one_hot', OneHotEncoder())
+    ])
+full_pipeline = ColumnTransformer([
+    ('num', num_pipeline, num_features),
+    ('cat', cat_pipeline, cat_features)
+    ])
+label_encoder = LabelEncoder()
 
 
+X_train, X_test, y_train, y_test = train_test_split(
+    income_cleaned[num_features + cat_features],
+    income_cleaned[target], train_size=0.75
+    )
 
+X_train = full_pipeline.fit_transform(X_train)
+y_train = label_encoder.fit_transform(y_train)
+X_test = full_pipeline.transform(X_test)
+y_test = label_encoder.transform(y_test)
 
+joblib.dump((X_train, X_test, y_train, y_test),
+            expanduser('~/Github/aimlds/data/clean/census_income.pkl'))
 
